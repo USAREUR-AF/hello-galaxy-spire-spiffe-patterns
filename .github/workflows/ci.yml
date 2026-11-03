@@ -1,0 +1,38 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: shellcheck and syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: bash -n
+        run: for f in bin/hello-spire lib/*.sh; do bash -n "$f"; done
+      - name: shellcheck
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck -S warning bin/hello-spire lib/*.sh
+
+  prove:
+    name: two-domain federation proof
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: bin/hello-spire all
+        run: bin/hello-spire all
+      - name: every check passed
+        run: |
+          cat out/results.env
+          grep -qx 'KNOCKOUT=OK' out/results.env
+          grep -qx 'PROOF=OK' out/results.env
+          grep -qx 'MTLS=OK' out/results.env
+      - name: tear down
+        if: always()
+        run: bin/hello-spire down

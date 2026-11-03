@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# hello-spire — run the SPIRE/SPIFFE federation proof end-to-end and render the report.
+#
+#   bin/hello-spire all        stand up → federate → prove → render out/report.html  (default)
+#   bin/hello-spire prove      run the proof only (leaves the servers up)
+#   bin/hello-spire report     re-render the HTML report from the last run's evidence
+#   bin/hello-spire open       open out/report.html in the browser
+#   bin/hello-spire down       tear everything down (containers, volumes, evidence)
+#
+#   bin/hello-spire goatnet       pod → NetBird → a goatnet's Zenoh router round trip,
+#                                 federated SPIRE X.509-SVID (needs goatnet/config.env +
+#                                 this host onboarded; see docs/goatnet-onboarding.md)
+#   bin/hello-spire goatnet-down  tear down the goatnet runner
+#
+# Local demo: needs only docker + openssl, no goatnet. Goatnet runner: needs docker
+# + this host being an onboarded NetBird peer of the goatnet.
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+case "${1:-all}" in
+  all)    bash "$ROOT/lib/prove.sh" all; bash "$ROOT/lib/report.sh"
+          echo "→ open the report:  bin/hello-spire open" ;;
+  prove)  bash "$ROOT/lib/prove.sh" all ;;
+  report) bash "$ROOT/lib/report.sh" ;;
+  open)   { command -v open >/dev/null && open "$ROOT/out/report.html"; } ||
+          { command -v xdg-open >/dev/null && xdg-open "$ROOT/out/report.html"; } ||
+          echo "report at: $ROOT/out/report.html" ;;
+  down)   bash "$ROOT/lib/prove.sh" down ;;
+  goatnet)      bash "$ROOT/lib/goatnet-run.sh" run ;;
+  goatnet-down) bash "$ROOT/lib/goatnet-run.sh" down ;;
+  goatnet-bundle) bash "$ROOT/lib/goatnet-run.sh" bundle ;;
+  *) echo "usage: bin/hello-spire [all|prove|report|open|down|goatnet|goatnet-down|goatnet-bundle]"; exit 1 ;;
+esac
