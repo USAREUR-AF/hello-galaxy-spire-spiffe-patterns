@@ -5,12 +5,15 @@ thing **against a goatnet** — a pod's own federated SPIRE identity publishing 
 receiving from the goatnet's Zenoh router over NetBird — there are two sides: a
 **one-time operator step** (recognition) and the **partner run** (the pod).
 
-You need a goatnet you operate, or whose operator will do the one-time step for you. To
-build one, start from the goatlite quickstart in
-[`usareur-af/goatcore`](https://github.com/usareur-af/goatcore) (`docs/tutorials/00-goatlite.md`)
+Any appropriate goatnet you have access to works:
+EFDI, the shared sandbox goatnet that partners are onboarded to (if you are onboarded to it); <!-- oss-allow: operator-approved public example goatnet -->
+a goatlite you stand up yourself (the goatlite quickstart in
+[`usareur-af/goatcore`](https://github.com/usareur-af/goatcore), `docs/tutorials/00-goatlite.md`,
 or the worked example in
-[`usareur-af/hello-galaxy-goatenv`](https://github.com/usareur-af/hello-galaxy-goatenv).
-The goatnet needs SPIRE deployed (goatcore `ops/ansible/spire-deploy.yml`).
+[`usareur-af/hello-galaxy-goatenv`](https://github.com/usareur-af/hello-galaxy-goatenv)); or
+another goatnet you have access to. The goatnet needs SPIRE deployed (goatcore
+`ops/ansible/spire-deploy.yml`), and the one-time recognition step below needs the goatnet's
+operators: you, if you are one, or the operators doing it for you.
 
 The split is deliberate: recognizing a partner is a privileged, infrequent operator action;
 running the pod is unprivileged and repeatable. The partner never needs operator access.
