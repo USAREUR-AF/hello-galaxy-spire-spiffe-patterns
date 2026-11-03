@@ -75,17 +75,19 @@ cat "$OUT/steps/06-proof.txt"
 log "7. Real cross-domain mTLS handshake (core verifier <- pod publisher)"
 # s_server: core identity, requires + verifies a client cert against the federated trust store.
 ( openssl s_server -accept 8765 -cert "$OUT/core/svid.pem" -key "$OUT/core/key.pem" \
-    -CAfile "$OUT/core-trust-federated.pem" -Verify 1 -naccept 1 -www >/dev/null 2>&1 ) &
-SRV=$!; sleep 1
+    -CAfile "$OUT/core-trust-federated.pem" -Verify 1 -naccept 1 -www >"$OUT/steps/07-server.log" 2>&1 ) &
+SRV=$!
+for _ in $(seq 1 50); do (exec 3<>/dev/tcp/127.0.0.1/8765) 2>/dev/null && break; sleep 0.2; done
 echo Q | openssl s_client -connect 127.0.0.1:8765 \
     -cert "$OUT/pod/svid.pem" -key "$OUT/pod/key.pem" \
-    -CAfile "$OUT/core-trust-federated.pem" 2>/dev/null \
-  | grep -iE "Verify return code|subject=|issuer=" | save 07-mtls.txt
+    -CAfile "$OUT/core-trust-federated.pem" 2>"$OUT/steps/07-client.err" \
+  | grep -iE "Verify return code|subject=|issuer=" | save 07-mtls.txt || true
 kill $SRV 2>/dev/null
 if grep -q "Verify return code: 0 (ok)" "$OUT/steps/07-mtls.txt"; then
   echo "PROVEN: mutual cross-domain mTLS handshake SUCCEEDED" | tee -a "$OUT/steps/07-mtls.txt"; MTLS=OK
 else
   echo "(handshake verify line not 0 — see step output)" | tee -a "$OUT/steps/07-mtls.txt"; MTLS=CHECK
+  tail -n 20 "$OUT/steps/07-server.log" "$OUT/steps/07-client.err" 2>/dev/null || true
 fi
 cat "$OUT/steps/07-mtls.txt"
 
