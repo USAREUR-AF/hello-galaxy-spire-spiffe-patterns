@@ -79,8 +79,9 @@ cat "$OUT/steps/06-proof.txt"
 log "7. Real cross-domain mTLS handshake (core verifier <- pod publisher)"
 # s_server: core identity, requires + verifies a client cert against the federated trust store.
 ( openssl s_server -accept 8765 -cert "$OUT/core/svid.pem" -key "$OUT/core-key.pem" \
-    -CAfile "$OUT/core-trust-federated.pem" -Verify 1 -naccept 1 -www >"$OUT/steps/07-server.log" 2>&1 ) &
+    -CAfile "$OUT/core-trust-federated.pem" -Verify 1 -naccept 2 -www >"$OUT/steps/07-server.log" 2>&1 ) &
 SRV=$!
+# the port probe below uses one of the two accepts
 for _ in $(seq 1 50); do (exec 3<>/dev/tcp/127.0.0.1/8765) 2>/dev/null && break; sleep 0.2; done
 echo Q | openssl s_client -connect 127.0.0.1:8765 \
     -cert "$OUT/pod/svid.pem" -key "$OUT/pod-key.pem" \
