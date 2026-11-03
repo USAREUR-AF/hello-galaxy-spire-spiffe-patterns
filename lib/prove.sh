@@ -40,6 +40,10 @@ pod  bundle show -format pem > "$OUT/pod-root.pem"
 log "3. Mint a leaf SVID in EACH domain (no agent — server x509 mint)"
 core x509 mint -spiffeID spiffe://core.galaxy/verifier  -write /opt/spire/out  2>&1 | save 03-mint-core.txt
 pod  x509 mint -spiffeID spiffe://partner.galaxy/publisher -write /opt/spire/out 2>&1 | save 03-mint-pod.txt
+# The servers write keys as their own user with mode 0600; on a Linux host the bind mount
+# keeps that owner, so copy each key out through docker to get a copy this user can read.
+$DC cp spire-core:/opt/spire/out/key.pem "$OUT/core-key.pem"
+$DC cp spire-pod:/opt/spire/out/key.pem  "$OUT/pod-key.pem"
 ls -l "$OUT/core" "$OUT/pod" | save 03-mint-files.txt
 
 log "4. KNOCKOUT — before federation, does core trust the pod's SVID?"
@@ -74,12 +78,12 @@ cat "$OUT/steps/06-proof.txt"
 
 log "7. Real cross-domain mTLS handshake (core verifier <- pod publisher)"
 # s_server: core identity, requires + verifies a client cert against the federated trust store.
-( openssl s_server -accept 8765 -cert "$OUT/core/svid.pem" -key "$OUT/core/key.pem" \
+( openssl s_server -accept 8765 -cert "$OUT/core/svid.pem" -key "$OUT/core-key.pem" \
     -CAfile "$OUT/core-trust-federated.pem" -Verify 1 -naccept 1 -www >"$OUT/steps/07-server.log" 2>&1 ) &
 SRV=$!
 for _ in $(seq 1 50); do (exec 3<>/dev/tcp/127.0.0.1/8765) 2>/dev/null && break; sleep 0.2; done
 echo Q | openssl s_client -connect 127.0.0.1:8765 \
-    -cert "$OUT/pod/svid.pem" -key "$OUT/pod/key.pem" \
+    -cert "$OUT/pod/svid.pem" -key "$OUT/pod-key.pem" \
     -CAfile "$OUT/core-trust-federated.pem" 2>"$OUT/steps/07-client.err" \
   | grep -iE "Verify return code|subject=|issuer=" | save 07-mtls.txt || true
 kill $SRV 2>/dev/null
