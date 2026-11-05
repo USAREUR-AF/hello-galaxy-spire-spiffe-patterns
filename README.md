@@ -55,9 +55,11 @@ bin/hello-spire goatnet                            # pod SPIRE â†’ X.509-SVID â†
 bin/hello-spire goatnet-down                       # tear down
 ```
 
-It works once the goatnet's operator has done the one-time recognition step (federate your
-trust domain + grant your `POD_CN`). Both sides are in
-[`docs/goatnet-onboarding.md`](docs/goatnet-onboarding.md).
+It works once the goatnet's operators have stood up an **edge router** for your pod: a
+separate router, for your trust domain only, that trusts your SPIRE root and forwards to the
+goatnet's core router. A goatnet never adds a partner's root to its core router. Until that
+edge exists, the goatnet's core router refuses your pod's identity, which is the correct
+result. Both sides are in [`docs/goatnet-onboarding.md`](docs/goatnet-onboarding.md).
 
 ## The two domains
 

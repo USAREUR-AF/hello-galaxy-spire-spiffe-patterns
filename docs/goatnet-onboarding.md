@@ -20,30 +20,26 @@ running the pod is unprivileged and repeatable. The partner never needs operator
 
 ## One-time operator step (goatnet side — privileged)
 
-Recognize the partner pod's trust domain so the goatnet's router accepts its certs. This is
-the federation block of goatcore's `spire` role (`ops/ansible/roles/spire`), declared as
-config.
+The goatnet recognises the pod's trust domain on an **edge router** of its own, never on its
+core router. goatcore's `spire` role writes the core router's trust from the goatnet's own
+bundle alone, and refuses to put a partner root there
+(`ops/ansible/roles/spire/defaults/main.yml`, the `spire_trust_sync_federated_edges` notes).
+The reason is in goatcore `docs/design/federated-trust-model.md`: the router's ACL matches a
+certificate's Common Name and cannot see which authority issued it, so a partner root in the
+core router could mint any name the core knows.
 
-1. Get the pod's **public** bundle + trust domain from the partner (the partner runs
+1. Get the pod's **public** bundle and trust domain from the partner (the partner runs
    `bin/hello-spire goatnet` once, then `bin/hello-spire goatnet-bundle`).
-2. Declare it in the goatnet's `spire` group_vars:
-   ```yaml
-   spire_federation_enabled: true
-   spire_federates_with:
-     - trust_domain: "<partner>.pod"
-       bundle_endpoint_url: "https://<partner bundle endpoint>"   # for auto-refresh; optional
-       endpoint_spiffe_id: "spiffe://<partner>.pod/spire/server"
-       bundle_b64: "<base64 of the partner's public bundle>"       # one-time bootstrap
-   ```
-3. Grant the pod's `POD_CN` write on its namespace in the Zenoh ACL. This is a separate
-   authorization step: recognizing a trust domain grants nothing on its own (goatcore
-   `docs/design/federated-trust-model.md`).
-4. Deploy: `spire-deploy.yml -e target=<site>_hosts`. The role bootstraps the partner
-   bundle, folds it into the router trust via `spire-trust-sync`, and restarts the router
-   once. Hand the partner the router CA + endpoint for their `goatnet/config.env`.
+2. Stand up the edge router for that one trust domain with goatcore's federation tooling:
+   `goat federate` composes the agreement (the trust domain, the Common Name the pod presents,
+   the keys it may write), and `ops/scripts/peering-standup.sh` deploys the edge
+   (`ops/ansible/peering-zenoh-edge.yml`, role `ops/ansible/roles/goat-zenoh-edge`). The edge
+   trusts your root and the goatnet's, admits exactly the agreed Common Name, and forwards
+   only the agreed keys to the core.
+3. Hand the partner the edge router's endpoint and CA for their `goatnet/config.env`.
 
-To stop recognizing a partner: drop the `spire_federates_with` entry and redeploy, or
-`spire-server bundle delete -id spiffe://<partner>.pod` (the domain-level kill-switch).
+To stop recognising a partner: move its entry to `spire_trust_sync_federated_edges_retired`
+and redeploy, or stop the edge container, which cuts the pod's only path at once.
 
 ## Partner run (pod side — unprivileged, repeatable)
 
@@ -56,6 +52,7 @@ bin/hello-spire goatnet-down                        # tear down
 ```
 
 Success prints `POD SUB RECEIVED …` — the federated identity sent and received on the
-goatnet's router. If it fails: `UnknownIssuer` in `docker logs hs-goatnet-sub` = the
-operator has not federated your trust domain yet; silent (no receive) = the ACL grant for
-your `POD_CN` is missing.
+goatnet's router. If it fails with "Unable to connect", you are pointing at a router that does not trust your
+root (a goatnet's core router, or an edge that is not yet up); `UnknownIssuer` in
+`docker logs hs-goatnet-sub` says the same. Silent (connected, no receive) = the edge's
+agreement does not admit your `POD_CN` or your key.

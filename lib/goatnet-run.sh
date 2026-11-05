@@ -90,7 +90,7 @@ if docker logs hs-goatnet-sub 2>&1 | grep -q "POD SUB RECEIVED"; then
   echo "✓ PROVEN: federated identity sent AND received on the goatnet over NetBird"
 else
   echo "✗ no data received. Most likely the goatnet side does not yet trust this pod —"
-  echo "  the operator must federate '$POD_TRUST_DOMAIN' + grant CN=$POD_CN (docs/goatnet-onboarding.md)."
+  echo "  ROUTER_ENDPOINT must be an edge router built for '$POD_TRUST_DOMAIN' that admits CN=$POD_CN; a goatnet's core router refuses it (docs/goatnet-onboarding.md)."
   echo "  Check: docker logs hs-goatnet-sub  (UnknownIssuer = federation missing; silent = ACL missing)."
 fi
 echo "(teardown: bin/hello-spire goatnet-down)"
