@@ -12,7 +12,7 @@ jobs:
     name: shellcheck and syntax
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: bash -n
         run: for f in bin/hello-spire lib/*.sh; do bash -n "$f"; done
       - name: shellcheck
@@ -24,7 +24,7 @@ jobs:
     name: two-domain federation proof
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: bin/hello-spire all
         run: bin/hello-spire all
       - name: every check passed
