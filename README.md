@@ -98,4 +98,4 @@ See [`docs/federation-explained.md`](docs/federation-explained.md) for the conce
 
 ## License
 
-Apache-2.0, see [LICENSE](LICENSE) and [NOTICE](NOTICE).
+`hello-galaxy-spire-spiffe-patterns` was written by U.S. Federal government employees. In the U.S. it is not subject to copyright and is in the public domain; in countries where copyright is recognized, it is released under the [Apache License 2.0](LICENSE). See [INTENT.md](INTENT.md). See also [NOTICE](NOTICE).
