@@ -6,7 +6,6 @@ receiving from the goatnet's Zenoh router over NetBird — there are two sides: 
 **one-time operator step** (recognition) and the **partner run** (the pod).
 
 Any appropriate goatnet you have access to works:
-EFDI, the shared sandbox goatnet that partners are onboarded to (if you are onboarded to it); <!-- oss-allow: operator-approved public example goatnet -->
 a goatlite you stand up yourself (the goatlite quickstart in
 [`usareur-af/goatcore`](https://github.com/usareur-af/goatcore), `docs/tutorials/00-goatlite.md`,
 or the worked example in

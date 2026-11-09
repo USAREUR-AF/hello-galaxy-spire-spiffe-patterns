@@ -44,7 +44,6 @@ The local demo proves the mechanism self-contained. The same pattern runs agains
 the pod's own federated SPIRE identity publishes to and receives from the goatnet's Zenoh
 router over NetBird. This path needs a goatnet you have access to, with SPIRE deployed and
 this host enrolled as one of its NetBird peers. That can be
-EFDI, the shared sandbox goatnet that partners are onboarded to (if you are onboarded to it); <!-- oss-allow: operator-approved public example goatnet -->
 a goatlite you stand up yourself (the goatlite quickstart in
 [`goatcore`](https://github.com/usareur-af/goatcore), `docs/tutorials/00-goatlite.md`); or
 another goatnet you have access to.
