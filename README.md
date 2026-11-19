@@ -1,5 +1,10 @@
 # hello-galaxy — SPIRE / SPIFFE patterns
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/figures/federation-dark.svg">
+  <img src="docs/figures/federation-light.svg" width="760" alt="Two SPIRE servers, core.galaxy and partner.galaxy, each with its own root CA (fingerprints 1B:67:E2:E6… and 87:53:89:07…). Before federation, core rejects the partner workload's certificate: unable to get local issuer certificate. After core imports partner.galaxy's public bundle, the certificate verifies and a mutual TLS handshake completes with verify return code 0 (ok).">
+</picture>
+
 A small, self-contained, **runnable proof** that SPIFFE **federation** works: two
 independent SPIRE trust domains, each with its own root CA, where a workload in one is trusted by
 the other **for real mutual mTLS** — and *only* because they exchanged public trust bundles.
