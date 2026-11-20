@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 460" width="880" height="460" role="img" aria-label="Two SPIRE servers, core.galaxy and partner.galaxy, each with its own root CA (fingerprints 1B:67:E2:E6… and 87:53:89:07…). Before federation, core rejects the partner workload's certificate: unable to get local issuer certificate. After core imports partner.galaxy's public bundle, the certificate verifies and a mutual TLS handshake completes with verify return code 0 (ok)."><style>svg{--ink:#191c22; --quiet:#555c68; --rule:#dde1e6; --line:#878f9c; --paper:#ffffff; --panel:#f5f6f8; --accent:#0b5a72; --accent-soft:#e2f0f4; --on-accent:#ffffff; --good:#2a6a35; --good-bg:#e4f3e6; --warn:#875200; --warn-bg:#fcf0d7; --info:#285d9e; --info-bg:#e6eff9; --crit:#b0261d; --crit-bg:#fbeae8; --mute:#5a606a; --mute-bg:#efeeeb; font-family:'Helvetica Neue',Helvetica,Arial,'Liberation Sans',sans-serif}
+.t{fill:var(--ink)} .tq{fill:var(--quiet)} .ta{fill:var(--accent)} .tg{fill:var(--good)}
+.tw{fill:var(--warn)} .ti{fill:var(--info)} .tc{fill:var(--crit)} .tm{fill:var(--mute)} .ton{fill:var(--on-accent)}
+.bx{fill:var(--paper);stroke:var(--line);stroke-width:1.25} .bxp{fill:var(--panel);stroke:var(--rule);stroke-width:1.25}
+.bxa{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.25} .bxg{fill:var(--good-bg);stroke:var(--good);stroke-width:1.25}
+.bxw{fill:var(--warn-bg);stroke:var(--warn);stroke-width:1.25} .bxi{fill:var(--info-bg);stroke:var(--info);stroke-width:1.25}
+.bxc{fill:var(--crit-bg);stroke:var(--crit);stroke-width:1.25} .bxm{fill:var(--mute-bg);stroke:var(--mute);stroke-width:1.25}
+.bxd{fill:var(--paper);stroke:var(--line);stroke-width:1.25;stroke-dasharray:5 4}
+.bxz{fill:none;stroke:var(--accent);stroke-width:1.25;stroke-dasharray:6 4}
+.ln{stroke:var(--line);stroke-width:1.5;fill:none} .lna{stroke:var(--accent);stroke-width:2.25;fill:none}
+.lng{stroke:var(--good);stroke-width:2;fill:none} .lnw{stroke:var(--warn);stroke-width:2;fill:none}
+.lnc{stroke:var(--crit);stroke-width:2;fill:none} .lnx{stroke:var(--crit);stroke-width:2;fill:none;stroke-dasharray:4 5}
+.lnd{stroke:var(--line);stroke-width:1.25;fill:none;stroke-dasharray:6 5} .lnr{stroke:var(--rule);stroke-width:1;fill:none}
+.fa{fill:var(--accent)} .fg{fill:var(--good)} .fl{fill:var(--line)} .fw{fill:var(--warn)} .fi{fill:var(--info)}
+.fc{fill:var(--crit)} .fm{fill:var(--mute)} .fp{fill:var(--panel)} .fs{fill:var(--accent-soft)} .fpaper{fill:var(--paper)}
+.mono{font-family:Menlo,Consolas,'Liberation Mono',monospace}
+</style>
+<text x="24" y="38" class="t" font-size="20" font-weight="700" data-role="title">A partner workload is trusted only after its public bundle is imported</text>
+<text x="24" y="66" class="tq" font-size="15">From the committed run, docs/sample-report.html: two SPIRE servers in docker compose, checked with openssl.</text>
+<rect x="20" y="98" width="196" height="342" rx="12" class="bxp"/>
+<text x="36" y="128" class="t mono" font-size="15" font-weight="700">core.galaxy</text>
+<text x="36" y="154" class="tq" font-size="14">stands in for a</text>
+<text x="36" y="174.3" class="tq" font-size="14">goatnet trust domain</text>
+<rect x="36" y="202" width="164" height="66" rx="8" class="bx"/>
+<text x="50" y="228" class="t" font-size="14" font-weight="700">own root CA</text>
+<text x="50" y="250" class="tq mono" font-size="13">1B:67:E2:E6…</text>
+<text x="36" y="302" class="tq" font-size="14">issues its own</text>
+<text x="36" y="322" class="tq" font-size="14">workloads locally</text>
+<text x="36" y="416" class="tq" font-size="14">SPIRE server 1.11.2</text>
+<rect x="664" y="98" width="196" height="342" rx="12" class="bxp"/>
+<text x="680" y="128" class="t mono" font-size="15" font-weight="700">partner.galaxy</text>
+<text x="680" y="154" class="tq" font-size="14">stands in for a</text>
+<text x="680" y="174.3" class="tq" font-size="14">partner pod's SPIRE</text>
+<rect x="680" y="202" width="164" height="66" rx="8" class="bx"/>
+<text x="694" y="228" class="t" font-size="14" font-weight="700">own root CA</text>
+<text x="694" y="250" class="tq mono" font-size="13">87:53:89:07…</text>
+<text x="680" y="302" class="tq" font-size="14">issues its own</text>
+<text x="680" y="322" class="tq" font-size="14">workloads locally</text>
+<text x="680" y="416" class="tq" font-size="14">SPIRE server 1.11.2</text>
+<circle cx="247" cy="120" r="15" class="fa"/>
+<text x="247" y="124.6" class="ton" font-size="13" text-anchor="middle" font-weight="700">1</text>
+<text x="270" y="125" class="t" font-size="14" font-weight="700">Before: core rejects the partner's SVID</text>
+<path d="M646 152L264 152" class="lnx"/>
+<circle cx="252" cy="152" r="10" class="fc"/>
+<path d="M248 148l8 8M256 148l-8 8" style="stroke:var(--paper);stroke-width:2.4;stroke-linecap:round"/>
+<text x="270" y="178" class="tc" font-size="14">openssl verify: unable to get</text>
+<text x="270" y="197" class="tc" font-size="14">local issuer certificate</text>
+<circle cx="247" cy="234" r="15" class="fa"/>
+<text x="247" y="238.6" class="ton" font-size="13" text-anchor="middle" font-weight="700">2</text>
+<text x="270" y="239" class="t" font-size="14" font-weight="700">Federate: core imports the public bundle</text>
+<path d="M234 266L244 261L244 271z" class="fa"/>
+<path d="M646 266L243 266" class="lna"/>
+<text x="270" y="292" class="tq" font-size="14">only public keys; no private key moves;</text>
+<text x="270" y="311" class="tq" font-size="14">fingerprint matches 87:53:89:07…</text>
+<circle cx="247" cy="348" r="15" class="fa"/>
+<text x="247" y="352.6" class="ton" font-size="13" text-anchor="middle" font-weight="700">3</text>
+<text x="270" y="353" class="t" font-size="14" font-weight="700">After: the SVID is accepted</text>
+<path d="M646 380L636 385L636 375z" class="fg"/>
+<path d="M440 380L637 380" class="lng"/>
+<path d="M234 380L244 375L244 385z" class="fg"/>
+<path d="M440 380L243 380" class="lng"/>
+<circle cx="440" cy="380" r="10" class="fg"/>
+<path d="M435 380l3.6 3.6l6.4-7.2" style="stroke:var(--paper);stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round"/>
+<text x="270" y="406" class="tg" font-size="14">and a mutual TLS handshake completes:</text>
+<text x="270" y="425" class="tg mono" font-size="14">Verify return code: 0 (ok)</text>
+</svg>
